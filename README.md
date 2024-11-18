@@ -1,6 +1,6 @@
 ## Blog
 
-This blog is a small Flask app with a SQLite backend.
+A small Flask app with a SQLite backend.
 
 
 ### Deploying to a server
@@ -16,7 +16,7 @@ On the host machine:
 4. Create the database with `flask --app blog init-db`
 5. Configure the secret key by:
     * Creating a new key with `python -c 'import secrets; print(secrets.token_hex())'`
-    * Create a `config.py` file with `touch .venv/var/blog-isntance/config.py`
+    * Creating a `config.py` file with `touch .venv/var/blog-isntance/config.py`
     * Copy the created key into `config.py` with the format `SECRET_KEY = "<key>"`
 6. Install waitress as the production server with `pip install waitress`
 7. Serve the blog through waitress with `waitress-serve --call 'blog:create_app`
@@ -27,15 +27,16 @@ On the host machine:
 I deployed the blog to my RaspberryPi using the steps above with slight modifications. On Step 7, I used the command
 `waitress-serve --call 'blog:create_app &` to run the command in the background (notice the `&`).
 
-I used Tailscale on the RaspberryPi and every blog "client" to create a secure tunnel to the blog. In other words, the
-RaspberryPi and thus my blog are not exposed to the internet.
+I use Tailscale on the RaspberryPi and every blog "client" to create a secure tunnel to the blog. In other words, the
+RaspberryPi, and my blog, are not exposed to the internet.
 
 
 ### Backing up the RaspberryPi
 
 The SQLite database is stored as a file inside the blog's virtual environment (located at `.venv/var/blog_instance/blog.sqlite`).
-To back up that database to an external drive, so that I don't lose the history of my blog, I created a Samba Server to expose
-those files to my Mac Mini to use Carbon Copy Cloner to backup those files to an external disk and my NAS. Here's how I did that:
+I back up that database to an external drive so I don't lose any history of what I've written. I created a Samba Server to expose
+the database to my Mac Mini. Once it's discoverable from my Mac Mini I use Carbon Copy Cloner to backup those files to an external disk and my NAS. 
+Here's how I did that:
 
 1. Create a new folder on the RaspberryPi called `Servers`
 2. Move (or install) the blog to the `Servers` folder
@@ -50,7 +51,7 @@ browseable = yes
 public=no
 ```
 6. Create a username and password with `sudo smbpasswd -a <USERNAME>`
-    * Enter in a password when prompted
+    * Enter a password when prompted
 7. Restart Samba with `sudo systemctl restart smbd`
 
-Now that the `Servers` folder is exposed via Samba it's discoverable on my Mac Mini and to the backup tools I use.
+This makes the `Servers` folder discoverable from my Mac Mini.
