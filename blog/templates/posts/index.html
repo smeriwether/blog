@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="space-y-8">
+        <h1 class="text-3xl font-bold text-gray-900">My Blog</h1>
+
+        <!-- Inline Post Creation Form -->
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <form id="postForm" action="{{ url_for('blog.posts') }}" method="POST" class="space-y-4">
+                <div>
+                    <textarea name="body"
+                              rows="3"
+                              placeholder="Write your post..."
+                              required
+                              class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit"
+                            class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
+                        Post
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Posts List -->
+        <div class="space-y-6">
+            {% for post in posts %}
+                <article class="bg-white p-6 rounded-lg shadow-sm">
+                    <p class="mb-4 text-gray-600">
+                        {{ post.body }}
+                    </p>
+                    <div class="w-full flex justify-between items-center">
+                      <time class="block text-xs text-gray-400 block mt-1">
+                          {{ post.created.strftime('%B %d, %Y %I:%M %p') }} UTC
+                      </time>
+                      <div class="flex justify-end">
+                        <a href="{{ url_for('blog.show_post', post_id=post.id) }}"
+                           class="flex-end text-blue-400 hover:text-blue-600 transition-colors">
+                            →
+                        </a>
+                      <div>
+                    <div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('postForm');
+            const textarea = form.querySelector('textarea');
+
+            function handleSubmit(event) {
+                // Only submit if field has content
+                if (textarea.value.trim()) {
+                    form.submit();
+                }
+            }
+
+            textarea.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    if (event.shiftKey) {
+                        // Shift+Enter: Let the newline happen naturally
+                        return;
+                    } else {
+                        // Regular Enter: Submit the form
+                        event.preventDefault();
+                        handleSubmit(event);
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
