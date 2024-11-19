@@ -1,0 +1,16 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "My personal blog",
+  "scripts": {
+    "build": "tailwindcss -i ./blog/css/main.css -o ./blog/static/main.css --minify",
+    "watch": "tailwindcss -i ./blog/css/main.css -o ./blog/static/main.css --watch"
+  },
+  "author": "Stephen Meriwether",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15"
+  }
+}
