@@ -14,7 +14,7 @@
                 {{ post.created.strftime('%B %d, %Y %I:%M %p') }}
             </time>
             <div class="prose max-w-none mt-6">
-                {{ post.body }}
+                {{ post.body | nl2br | safe }}
             </div>
         </article>
     </div>
