@@ -23,13 +23,28 @@
             </form>
         </div>
 
+        <div class="flex justify-end">
+          <div class="flex items-center space-x-2">
+              <input type="checkbox"
+                     id="hideContent"
+                     class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                     checked>
+              <label for="hideContent" class="text-sm text-gray-600">
+                  Hide Content
+              </label>
+          </div>
+        </div>
+
         <!-- Posts List -->
         <div class="space-y-6">
             {% for post in posts %}
                 <article class="bg-white p-6 rounded-lg shadow-sm">
-                    <p class="mb-4 text-gray-600">
-                        {{ post.body }}
-                    </p>
+                    <div class="relative">
+                      <p class="mb-4 text-gray-600">
+                          {{ post.body }}
+                      </p>
+                      <div class="absolute inset-0 bg-gray-300 opacity-0 transition-opacity duration-200 content-overlay"></div>
+                    </div>
                     <div class="w-full flex justify-between items-center">
                       <time class="block text-xs text-gray-400 block mt-1">
                           {{ post.created.strftime('%B %d, %Y %I:%M %p') }} UTC
@@ -70,6 +85,26 @@
                     }
                 }
             });
+
+            // Content hiding feature
+            const hideContentCheckbox = document.getElementById('hideContent');
+            const contentOverlays = document.querySelectorAll('.content-overlay');
+
+            hideContentCheckbox.addEventListener('change', function() {
+                contentOverlays.forEach(overlay => {
+                    if (this.checked) {
+                        overlay.classList.add('opacity-100');
+                        overlay.classList.remove('opacity-0');
+                    } else {
+                        overlay.classList.add('opacity-0');
+                        overlay.classList.remove('opacity-100');
+                    }
+                });
+            });
+
+            if (hideContentCheckbox.checked) {
+                hideContentCheckbox.dispatchEvent(new Event('change'));
+            }
         });
     </script>
 {% endblock %}
