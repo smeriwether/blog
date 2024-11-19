@@ -11,7 +11,7 @@
 
         <article class="bg-white p-8 rounded-lg shadow-md">
             <time class="text-sm text-gray-500 block mt-2">
-                {{ post.created.strftime('%B %d, %Y %I:%M %p') }}
+                {{ post.created | format_datetime }}
             </time>
             <div class="prose max-w-none mt-6">
                 {{ post.body | nl2br | safe }}
