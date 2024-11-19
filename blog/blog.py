@@ -42,3 +42,11 @@ def show_post(post_id):
 @bp.route('/')
 def index():
     return redirect(url_for('blog.posts'))
+
+
+def nl2br(value):
+    if not value:
+        return value
+    return value.replace('\n', '<br>')
+
+bp.add_app_template_filter(nl2br, 'nl2br')

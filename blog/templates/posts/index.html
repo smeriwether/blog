@@ -41,7 +41,7 @@
                 <article class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="relative">
                       <p class="mb-4 text-gray-600">
-                          {{ post.body }}
+                          {{ post.body | nl2br | safe }}
                       </p>
                       <div class="absolute inset-0 bg-gray-300 opacity-0 transition-opacity duration-200 content-overlay"></div>
                     </div>

@@ -3,7 +3,7 @@ from blog.db import get_db
 
 def test_index(client):
     response = client.get('/posts')
-    assert b'test\nbody' in response.data
+    assert b'test<br>body' in response.data
 
 def test_create(client, app):
     client.post('/posts', data={'body': 'this is another test'})
