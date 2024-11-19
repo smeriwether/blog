@@ -1,8 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="space-y-8">
-        <h1 class="text-3xl font-bold text-gray-900">My Blog</h1>
+    <div class="">
+      <div class="flex">
+        <picture class="mr-4">
+          <source srcset="/static/photo.jp2" type="image/jp2">
+          <source srcset="/static/photo.webp" type="image/webp">
+          <source srcset="/static/photo.jpg" type="image/jpeg">
+          <img src="photo.jpg" height="100px" width="100px" class="rounded mb-8" alt="" fetchpriority="high">
+        </picture>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">My Blog</h1>
+          <p>A blog about nothing, everything, and anything in between.</p>
+        </div>
+      </div>
 
         <!-- Inline Post Creation Form -->
         <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -23,7 +34,7 @@
             </form>
         </div>
 
-        <div class="flex justify-end">
+        <div class="my-8 flex justify-end">
           <div class="flex items-center space-x-2">
               <input type="checkbox"
                      id="hideContent"
