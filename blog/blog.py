@@ -26,7 +26,10 @@ def posts():
         posts = db.execute(
             'SELECT * FROM post ORDER BY created DESC'
         ).fetchall()
-        return render_template('posts/index.html', posts=posts)
+        message = db.execute(
+            'SELECT * FROM message ORDER BY created DESC'
+        ).fetchone()
+        return render_template('posts/index.html', posts=posts, message=message)
 
 # SHOW - GET /posts/<id>
 @bp.route('/posts/<int:post_id>', methods=['GET'])
