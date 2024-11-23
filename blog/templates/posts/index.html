@@ -21,6 +21,7 @@
             <form id="postForm" action="{{ url_for('blog.posts') }}" method="POST" class="space-y-4">
                 <div>
                     <textarea name="body"
+                              id="postInput"
                               rows="5"
                               placeholder="Write your post..."
                               required
@@ -76,7 +77,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('postForm');
-            const textarea = form.querySelector('textarea');
+            const textarea = document.getElementById('postInput');
+
+            textarea.focus()
 
             function handleSubmit(event) {
                 // Only submit if field has content
