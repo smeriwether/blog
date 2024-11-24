@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 
+{% block head %}
+  <script src="{{ url_for('static', filename='js/tinymce/tinymce.min.js') }}"></script>
+  <script>
+    tinymce.init({
+      license_key: 'gpl',
+      selector: '#editor',
+      base_url: '{{ url_for("static", filename="js/tinymce") }}',
+      plugins: 'lists link image table code help wordcount',
+      toolbar: 'formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
+      height: 250,
+      menubar: false,
+      valid_elements: 'p,br,strong,em,h1,h2,h3,h4,h5,h6,ul,ol,li,a[href],img[src|alt],blockquote,pre,code',
+      relative_urls: true,
+      extended_valid_elements: '-script,-iframe,-form,-input,-textarea,-button',
+    });
+  </script>
+{% endblock %}
+
 {% block content %}
     <div class="">
       <div class="flex">
@@ -20,7 +38,7 @@
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <form id="postForm" action="{{ url_for('blog.posts') }}" method="POST" class="space-y-4">
                 <div>
-                    <textarea name="body" id="postInput" rows="5" placeholder="Write your post..." required class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
+                    <textarea name="body" id="editor" rows="5" placeholder="Write your post..." class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
                 </div>
                 <div class="flex justify-end">
                     <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
@@ -44,9 +62,9 @@
             {% for post in posts %}
                 <article class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="relative">
-                      <p class="mb-4 text-gray-600">
-                          {{ post.body | nl2br | safe }}
-                      </p>
+                      <div class="prose mb-4 text-gray-600">
+                          {{ post.body | safe_html }}
+                      </div>
                       <div class="absolute inset-0 bg-gray-300 opacity-0 transition-opacity duration-200 content-overlay"></div>
                     </div>
                     <div class="w-full flex justify-between items-center">
@@ -67,18 +85,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('postForm');
-            const textarea = document.getElementById('postInput');
+            const editor = document.getElementById('editor');
 
-            textarea.focus()
+            editor.focus()
 
             function handleSubmit(event) {
                 // Only submit if field has content
-                if (textarea.value.trim()) {
+                if (editor.value.trim()) {
                     form.submit();
                 }
             }
 
-            textarea.addEventListener('keydown', function(event) {
+            editor.addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
                     if (event.shiftKey) {
                         // Shift+Enter: Let the newline happen naturally

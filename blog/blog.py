@@ -5,7 +5,8 @@ from werkzeug.exceptions import abort
 
 from blog.post_db import PostDb
 from blog.message_db import MessageDb
-from blog.jinja_utils import nl2br, relative_datetime
+from blog.jinja_utils import relative_datetime, safe_html
+from blog.utils import sanitize_html
 
 bp = Blueprint('blog', __name__)
 
@@ -21,7 +22,7 @@ def posts():
 @bp.route('/posts', methods=['POST'])
 def create_post():
     post_db = PostDb()
-    body = str(request.form['body']).strip()
+    body = sanitize_html(str(request.form['body']).strip())
     if not body:
         abort(400)
 
@@ -59,7 +60,7 @@ def update_post(post_id):
     if not post:
         abort(404)
 
-    body = str(request.form['body']).strip()
+    body = sanitize_html(str(request.form['body']).strip())
     if not body:
         abort(400)
 
@@ -84,5 +85,5 @@ def delete_post(post_id):
 def index():
     return redirect(url_for('blog.posts'))
 
-bp.add_app_template_filter(nl2br, 'nl2br')
+bp.add_app_template_filter(safe_html, 'safe_html')
 bp.add_app_template_filter(relative_datetime, 'relative_datetime')

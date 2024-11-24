@@ -4,6 +4,9 @@ version = "1.0.0"
 description = "My blog"
 dependencies = [
     "flask",
+    "bleach",
+    "pytz",
+    "tinycss2"
 ]
 
 [build-system]

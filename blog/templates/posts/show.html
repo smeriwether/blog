@@ -13,7 +13,7 @@
                 {{ post.created_at | relative_datetime }}
             </time>
             <div class="prose max-w-none mt-6">
-                {{ post.body | nl2br | safe }}
+                {{ post.body | safe_html }}
             </div>
         </article>
 

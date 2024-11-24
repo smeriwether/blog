@@ -1,10 +1,12 @@
-from datetime import datetime
 import pytz
+from datetime import datetime
+from markupsafe import Markup
 
-def nl2br(value):
-    if not value:
-        return value
-    return value.replace('\n', '<br>')
+from blog.utils import sanitize_html
+
+
+def safe_html(text):
+    return Markup(sanitize_html(text))
 
 
 def relative_datetime(value, include_relative=True):

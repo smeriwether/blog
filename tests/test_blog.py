@@ -3,7 +3,7 @@ from blog.db import get_db
 
 def test_index(client):
     response = client.get('/posts')
-    assert b'test<br>body' in response.data
+    assert b'test\nbody' in response.data
 
 def test_index_does_not_return_deleted_posts(client):
     response = client.get('/posts')
@@ -31,7 +31,7 @@ def test_create_validates_body_has_content(client, app):
         
 def test_show(client, app):
     response = client.get('/posts/1')
-    assert b'test<br>body' in response.data
+    assert b'test\nbody' in response.data
 
 def test_show_does_not_show_deleted_posts(client, app):
     response = client.get('/posts/2')
