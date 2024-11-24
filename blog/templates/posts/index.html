@@ -2,20 +2,72 @@
 
 {% block head %}
   <script src="{{ url_for('static', filename='js/tinymce/tinymce.min.js') }}"></script>
+  <link href="{{ url_for('static', filename='css/prism/prism.css') }}" rel="stylesheet" />
+  <script src="{{ url_for('static', filename='js/prism/prism.js') }}"></script>
   <script>
     tinymce.init({
       license_key: 'gpl',
       selector: '#editor',
       base_url: '{{ url_for("static", filename="js/tinymce") }}',
-      plugins: 'lists link image table code help wordcount',
-      toolbar: 'formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
+      plugins: 'lists link image table code help wordcount codesample',
+      toolbar: 'formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | codesample',
+      init_instance_callback: function(editor) {
+        editor.focus();
+      },
+      setup: function(editor) {
+        editor.on('init', function() {
+          editor.selection.select(editor.getBody(), true);
+          editor.selection.collapse(false);
+        });
+
+        // Handle enter key
+        editor.on('keydown', function(e) {
+          if (e.keyCode === 13) { // Enter key
+            if (!e.shiftKey) { // Enter without shift
+              e.preventDefault();
+              document.getElementById('postForm').submit();
+            }
+            // With shift, let the default behavior (new line) happen
+          }
+        });
+
+        // Your existing setup code
+        editor.addShortcut('ctrl+alt+c', 'Insert code sample', function() {
+          editor.execCommand('codesample');
+        });
+
+        editor.on('change', function() {
+          editor.save();
+        });
+      },
       height: 250,
       menubar: false,
-      valid_elements: 'p,br,strong,em,h1,h2,h3,h4,h5,h6,ul,ol,li,a[href],img[src|alt],blockquote,pre,code',
+      valid_elements: 'p,br,strong,em,h1,h2,h3,h4,h5,h6,ul,ol,li,a[href],img[src|alt],blockquote,pre,code,pre[class],code[class],div[class]',
       relative_urls: true,
       extended_valid_elements: '-script,-iframe,-form,-input,-textarea,-button',
+      codesample_languages: [
+        { text: 'Python', value: 'python' },
+        { text: 'JavaScript', value: 'javascript' },
+        { text: 'HTML/XML', value: 'markup' },
+        { text: 'CSS', value: 'css' },
+        { text: 'Bash', value: 'bash' },
+      ],
+      codesample_global_prismjs: true,
     });
   </script>
+
+  <style>
+    pre[class*="language-"] {
+      background: #f5f5f5;
+      border-radius: 0.375rem;
+      margin: 1.5em 0;
+    }
+
+    code[class*="language-"] {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875em;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -84,32 +136,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('postForm');
-            const editor = document.getElementById('editor');
-
-            editor.focus()
-
-            function handleSubmit(event) {
-                // Only submit if field has content
-                if (editor.value.trim()) {
-                    form.submit();
-                }
-            }
-
-            editor.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    if (event.shiftKey) {
-                        // Shift+Enter: Let the newline happen naturally
-                        return;
-                    } else {
-                        // Regular Enter: Submit the form
-                        event.preventDefault();
-                        handleSubmit(event);
-                    }
-                }
-            });
-
-            // Content hiding feature
             const hideContentCheckbox = document.getElementById('hideContent');
             const contentOverlays = document.querySelectorAll('.content-overlay');
 
