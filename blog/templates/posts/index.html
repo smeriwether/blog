@@ -71,29 +71,35 @@
 {% endblock %}
 
 {% block content %}
-    <div class="">
-      <div class="flex">
-        <picture class="mr-4">
-          <source srcset="/static/photo.jp2" type="image/jp2">
-          <source srcset="/static/photo.webp" type="image/webp">
-          <source srcset="/static/photo.jpg" type="image/jpeg">
-          <img src="photo.jpg" height="100px" width="100px" class="rounded mb-8" alt="" fetchpriority="high">
-        </picture>
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900">My Blog</h1>
-          <p class="mb-4">A private archive of daily reflections.</p>
-          <span class="bg-orange-50 p-1">{{ message.content }}</span>
+    <div>
+      <div>
+        <div class="flex mb-4 md:mb-8">
+          <picture class="mr-4">
+            <source srcset="/static/photo.jp2" type="image/jp2">
+            <source srcset="/static/photo.webp" type="image/webp">
+            <source srcset="/static/photo.jpg" type="image/jpeg">
+            <img src="photo.jpg" height="115px" width="115px" class="rounded" alt="" fetchpriority="high">
+          </picture>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">My Blog</h1>
+            <p class="md:mb-4">A private archive of daily reflections.</p>
+            <span class="hidden md:block bg-orange-50 p-1">{{ message.content }}</span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <span class="md:hidden bg-orange-50 p-1">{{ message.content }}</span>
         </div>
       </div>
 
         <!-- Inline Post Creation Form -->
-        <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="bg-white p-4 rounded-lg shadow-sm md:p-4">
             <form id="postForm" action="{{ url_for('blog.posts') }}" method="POST" class="space-y-4">
                 <div>
                     <textarea name="body" id="editor" rows="5" placeholder="Write your post..." class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
                 </div>
                 <div class="flex justify-end">
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
+                    <button type="submit" class="w-full p-2 text-center bg-blue-500 text-white hover:bg-blue-600 rounded md:w-auto md:px-6 md:py-2">
                         Post
                     </button>
                 </div>
