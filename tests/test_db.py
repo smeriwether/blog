@@ -1,6 +1,7 @@
 import sqlite3
 
 import pytest
+
 from blog.db import get_db
 
 
@@ -10,6 +11,6 @@ def test_get_close_db(app):
         assert db is get_db()
 
     with pytest.raises(sqlite3.ProgrammingError) as e:
-        db.execute('SELECT 1')
+        db.execute("SELECT 1")
 
-    assert 'closed' in str(e.value)
+    assert "closed" in str(e.value)

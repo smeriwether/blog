@@ -19,3 +19,27 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 source = ["blog"]
+
+[tool.ruff]
+# Enable linting rules
+lint.select = ["E", "F", "I"]
+lint.ignore = []
+
+# Allow autofix for all enabled rules (when `--fix` is passed)
+lint.fixable = ["A", "B", "C", "D", "E", "F", "I"]
+lint.unfixable = []
+
+# Same as Black.
+line-length = 88
+
+# Assume Python 3.8
+target-version = "py38"
+
+# Enable the formatter
+[tool.ruff.format]
+# Use single quotes for strings
+quote-style = "double"
+# Indent with 4 spaces
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

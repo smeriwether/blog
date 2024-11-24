@@ -6,3 +6,5 @@ dist/
 instance/
 src/
 node_modules/
+.ruff_cache/
+.eslintcache
