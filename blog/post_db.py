@@ -42,3 +42,19 @@ class PostDb:
             (datetime.now(), post_id),
         )
         self.db.commit()
+
+
+    def favorite(self, post_id):
+        self.db.execute(
+            'UPDATE post SET favorite = 1, updated_at = ? WHERE id = ?',
+            (datetime.now(), post_id),
+        )
+        self.db.commit()
+
+
+    def unfavorite(self, post_id):
+        self.db.execute(
+            'UPDATE post SET favorite = 0, updated_at = ? WHERE id = ?',
+            (datetime.now(), post_id),
+        )
+        self.db.commit()

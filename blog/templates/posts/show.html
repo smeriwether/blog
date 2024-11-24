@@ -9,24 +9,56 @@
         </div>
 
         <article class="bg-white p-8 rounded-lg shadow-md mb-4">
+          <div class="flex justify-between items-center">
             <time class="text-sm text-gray-500 block mt-2">
                 {{ post.created_at | relative_datetime }}
             </time>
-            <div class="prose max-w-none mt-6">
-                {{ post.body | safe_html }}
-            </div>
+
+            {% if post.favorite %}
+              <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="rgb(202 138 4)" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-yellow-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                  </svg>
+              </div>
+            {% endif %}
+          </div>
+          <div class="prose max-w-none mt-6">
+              {{ post.body | safe_html }}
+          </div>
         </article>
 
-        <div class="flex flex-col md:flex-row md:justify-end">
-          <a href="{{ url_for('blog.edit_post', post_id=post.id) }}" class="w-full p-2 text-center bg-gray-200 text-gray-900 hover:bg-gray-300 rounded mb-2 md:mb-0 md:bg-inherit md:p-1 md:w-auto md:mr-2 md:text-gray-500 md:hover:text-gray-600">
-            Edit
-          </a>
+        <div class="flex flex-col md:flex-row md:justify-between">
+          {% if post.favorite %}
+            <form action="{{ url_for('blog.unfavorite_post', post_id=post.id) }}" method="POST" class="mb-2 md:mb-0">
+              <button type="submit" class="flex items-center justify-center w-full p-2 text-center bg-orange-200 text-orange-900 hover:bg-orange-200 rounded md:bg-inherit md:p-1 md:w-auto md:text-orange-500 md:hover:text-orange-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="ml-1">Unfavorite</span>
+              </button>
+            </form>
+          {% else %}
+            <form action="{{ url_for('blog.favorite_post', post_id=post.id) }}" method="POST" class="mb-2 md:mb-0">
+              <button type="submit" class="flex items-center justify-center w-full p-2 text-center bg-purple-200 text-purple-900 hover:bg-purple-200 rounded md:bg-inherit md:p-1 md:w-auto md:text-purple-500 md:hover:text-purple-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                </svg>
+                <span class="ml-1">Favorite</span>
+              </button>
+            </form>
+          {% endif %}
 
-          <form action="{{ url_for('blog.delete_post', post_id=post.id) }}" method="POST">
-            <button type="submit" class="w-full p-2 text-center bg-orange-200 text-orange-900 hover:bg-orange-300 rounded md:bg-inherit md:p-1 md:w-auto md:text-orange-500 md:hover:text-orange-600">
-              Delete
-            </button>
-          </form>
+          <div class="flex flex-col md:flex-row">
+            <a href="{{ url_for('blog.edit_post', post_id=post.id) }}" class="w-full p-2 text-center bg-gray-200 text-gray-900 hover:bg-gray-200 rounded mb-2 md:mb-0 md:bg-inherit md:p-1 md:w-auto md:mr-2 md:text-gray-500 md:hover:text-gray-600">
+              Edit
+            </a>
+
+            <form action="{{ url_for('blog.delete_post', post_id=post.id) }}" method="POST">
+              <button type="submit" class="w-full p-2 text-center bg-orange-200 text-orange-900 hover:bg-orange-200 rounded md:bg-inherit md:p-1 md:w-auto md:text-orange-500 md:hover:text-orange-600">
+                Delete
+              </button>
+            </form>
+          </div>
         </div>
     </div>
 {% endblock %}

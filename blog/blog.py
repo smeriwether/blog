@@ -80,6 +80,27 @@ def delete_post(post_id):
     post_db.delete(post_id)
     return redirect(url_for('blog.posts'))
 
+@bp.route('/posts/<int:post_id>/favorite', methods=['POST'])
+def favorite_post(post_id):
+    post_db = PostDb()
+    post = post_db.find(post_id)
+
+    if not post:
+        abort(404)
+
+    post_db.favorite(post_id)
+    return redirect(url_for('blog.show_post', post_id=post_id))
+
+@bp.route('/posts/<int:post_id>/unfavorite', methods=['POST'])
+def unfavorite_post(post_id):
+    post_db = PostDb()
+    post = post_db.find(post_id)
+
+    if not post:
+        abort(404)
+
+    post_db.unfavorite(post_id)
+    return redirect(url_for('blog.show_post', post_id=post_id))
 
 @bp.route('/')
 def index():
