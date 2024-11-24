@@ -20,16 +20,10 @@
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <form id="postForm" action="{{ url_for('blog.posts') }}" method="POST" class="space-y-4">
                 <div>
-                    <textarea name="body"
-                              id="postInput"
-                              rows="5"
-                              placeholder="Write your post..."
-                              required
-                              class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
+                    <textarea name="body" id="postInput" rows="5" placeholder="Write your post..." required class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"></textarea>
                 </div>
                 <div class="flex justify-end">
-                    <button type="submit"
-                            class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
                         Post
                     </button>
                 </div>
@@ -38,10 +32,7 @@
 
         <div class="my-8 flex justify-end">
           <div class="flex items-center space-x-2">
-              <input type="checkbox"
-                     id="hideContent"
-                     class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                     checked>
+              <input type="checkbox" id="hideContent" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" checked>
               <label for="hideContent" class="text-sm text-gray-600">
                   Hide Content
               </label>
@@ -60,11 +51,10 @@
                     </div>
                     <div class="w-full flex justify-between items-center">
                       <time class="block text-xs text-gray-400 block mt-1">
-                          {{ post.created | format_datetime }}
+                          {{ post.created_at | relative_datetime }}
                       </time>
                       <div class="flex justify-end">
-                        <a href="{{ url_for('blog.show_post', post_id=post.id) }}"
-                           class="flex-end text-blue-400 hover:text-blue-600 transition-colors">
+                        <a href="{{ url_for('blog.show_post', post_id=post.id) }}" class="flex-end text-blue-400 hover:text-blue-600 transition-colors" aria-label="See post {{post.id}} details">
                             →
                         </a>
                       <div>

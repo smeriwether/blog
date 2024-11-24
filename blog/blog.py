@@ -2,88 +2,87 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-from datetime import datetime
-import pytz
 
-from blog.db import get_db
+from blog.post_db import PostDb
+from blog.message_db import MessageDb
+from blog.jinja_utils import nl2br, relative_datetime
 
 bp = Blueprint('blog', __name__)
 
 
-@bp.route('/posts', methods=['GET', 'POST'])
+@bp.route('/posts', methods=['GET'])
 def posts():
-    db = get_db()
-    if request.method == 'POST':
-        body = request.form['body']
-        if not body:
-            abort(400)
-        
-        db.execute(
-            'INSERT INTO post (body) VALUES (?)',
-            (body,),
-        )
-        db.commit()
-        return redirect(url_for('blog.posts'))
-    else:
-        posts = db.execute(
-            'SELECT * FROM post ORDER BY created DESC'
-        ).fetchall()
-        message = db.execute(
-            'SELECT * FROM message ORDER BY created DESC'
-        ).fetchone()
-        return render_template('posts/index.html', posts=posts, message=message)
+    post_db = PostDb()
+    message_db = MessageDb()
+    posts = post_db.all()
+    message = message_db.last()
+    return render_template('posts/index.html', posts=posts, message=message)
 
-# SHOW - GET /posts/<id>
+@bp.route('/posts', methods=['POST'])
+def create_post():
+    post_db = PostDb()
+    body = str(request.form['body']).strip()
+    if not body:
+        abort(400)
+
+    post_db.create(body)
+
+    return redirect(url_for('blog.posts'))
+
 @bp.route('/posts/<int:post_id>', methods=['GET'])
 def show_post(post_id):
-    db = get_db()
-    post = db.execute(
-        'SELECT * FROM post WHERE id = ?',
-        (post_id,),
-    ).fetchone()
+    post_db = PostDb()
+    post = post_db.find(post_id)
+
+    if not post:
+        abort(404)
+
     return render_template('posts/show.html', post=post)
 
-# Root redirect
+
+@bp.route('/posts/<int:post_id>/edit', methods=['GET'])
+def edit_post(post_id):
+    post_db = PostDb()
+    post = post_db.find(post_id)
+
+    if not post:
+        abort(404)
+
+    return render_template('posts/edit.html', post=post)
+
+
+@bp.route('/posts/<int:post_id>/update', methods=['POST'])
+def update_post(post_id):
+    post_db = PostDb()
+    post = post_db.find(post_id)
+
+    if not post:
+        abort(404)
+
+    body = str(request.form['body']).strip()
+    if not body:
+        abort(400)
+
+    post_db.update(post_id, body)
+
+    return redirect(url_for('blog.show_post', post_id=post_id))
+
+
+@bp.route('/posts/<int:post_id>/delete', methods=['POST'])
+def delete_post(post_id):
+    post_db = PostDb()
+    post = post_db.find(post_id)
+
+    if not post:
+        abort(404)
+
+    post_db.delete(post_id)
+    return redirect(url_for('blog.posts'))
+
+
 @bp.route('/')
 def index():
     return redirect(url_for('blog.posts'))
 
-
-def nl2br(value):
-    if not value:
-        return value
-    return value.replace('\n', '<br>')
-
-
-def format_datetime(value, include_relative=True):
-    eastern = pytz.timezone('US/Eastern')
-    if value.tzinfo is None:
-        value = pytz.utc.localize(value)
-    eastern_dt = value.astimezone(eastern)
-
-    # Get current time in Eastern
-    now = datetime.now(eastern)
-
-    # Calculate time difference
-    diff = now - eastern_dt
-
-    if include_relative:
-        if diff.days == 0:
-            if diff.seconds < 60:
-                return 'just now'
-            if diff.seconds < 3600:
-                minutes = diff.seconds // 60
-                return f'{minutes} minute{"s" if minutes != 1 else ""} ago'
-            if diff.seconds < 86400:
-                hours = diff.seconds // 3600
-                return f'{hours} hour{"s" if hours != 1 else ""} ago'
-        if diff.days == 1:
-            return 'Yesterday'
-        if diff.days < 7:
-            return f'{diff.days} days ago'
-
-    # Fall back to regular format for older dates
-    return eastern_dt.strftime('%B %d, %Y %I:%M %p %Z')
-
 bp.add_app_template_filter(nl2br, 'nl2br')
-bp.add_app_template_filter(format_datetime, 'format_datetime')
+bp.add_app_template_filter(relative_datetime, 'relative_datetime')

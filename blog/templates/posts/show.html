@@ -3,19 +3,30 @@
 {% block content %}
     <div class="max-w-2xl mx-auto">
         <div class="mb-8 flex items-center">
-            <a href="{{ url_for('blog.posts') }}"
-               class="text-blue-500 hover:text-blue-600 transition-colors">
+            <a href="{{ url_for('blog.posts') }}" class="text-blue-500 hover:text-blue-600">
                 ← Back to Blog
             </a>
         </div>
 
-        <article class="bg-white p-8 rounded-lg shadow-md">
+        <article class="bg-white p-8 rounded-lg shadow-md mb-4">
             <time class="text-sm text-gray-500 block mt-2">
-                {{ post.created | format_datetime }}
+                {{ post.created_at | relative_datetime }}
             </time>
             <div class="prose max-w-none mt-6">
                 {{ post.body | nl2br | safe }}
             </div>
         </article>
+
+        <div class="flex justify-end">
+          <a href="{{ url_for('blog.edit_post', post_id=post.id) }}" class="mr-4 text-gray-500 hover:text-gray-600">
+            Edit
+          </a>
+
+          <form action="{{ url_for('blog.delete_post', post_id=post.id) }}" method="POST">
+            <button type="submit" class="text-orange-500 hover:text-orange-600">
+              Delete
+            </button>
+          </form>
+        </div>
     </div>
 {% endblock %}
