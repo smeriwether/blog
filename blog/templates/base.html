@@ -35,14 +35,9 @@
 
           // Handle enter key
           editor.on('keydown', function (e) {
-            if (e.keyCode === 13) {
-              // Enter key
-              if (!e.shiftKey) {
-                // Enter without shift
-                e.preventDefault();
-                document.getElementById('postForm').submit();
-              }
-              // With shift, let the default behavior (new line) happen
+            if (e.keyCode === 13 && e.metaKey) {
+              e.preventDefault();
+              document.getElementById('postForm').submit();
             }
           });
 
