@@ -1,75 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-  <script src="{{ url_for('static', filename='js/tinymce/tinymce.min.js') }}"></script>
-  <link href="{{ url_for('static', filename='css/prism/prism.css') }}" rel="stylesheet" />
-  <script src="{{ url_for('static', filename='js/prism/prism.js') }}"></script>
-  <script>
-    tinymce.init({
-      license_key: 'gpl',
-      selector: '#editor',
-      base_url: '{{ url_for("static", filename="js/tinymce") }}',
-      plugins: 'lists link image table code help wordcount codesample',
-      toolbar: 'formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | codesample',
-      init_instance_callback: function(editor) {
-        editor.focus();
-      },
-      setup: function(editor) {
-        editor.on('init', function() {
-          editor.selection.select(editor.getBody(), true);
-          editor.selection.collapse(false);
-        });
-
-        // Handle enter key
-        editor.on('keydown', function(e) {
-          if (e.keyCode === 13) { // Enter key
-            if (!e.shiftKey) { // Enter without shift
-              e.preventDefault();
-              document.getElementById('postForm').submit();
-            }
-            // With shift, let the default behavior (new line) happen
-          }
-        });
-
-        // Your existing setup code
-        editor.addShortcut('ctrl+alt+c', 'Insert code sample', function() {
-          editor.execCommand('codesample');
-        });
-
-        editor.on('change', function() {
-          editor.save();
-        });
-      },
-      height: 250,
-      menubar: false,
-      valid_elements: 'p,br,strong,em,h1,h2,h3,h4,h5,h6,ul,ol,li,a[href],img[src|alt],blockquote,pre,code,pre[class],code[class],div[class]',
-      relative_urls: true,
-      extended_valid_elements: '-script,-iframe,-form,-input,-textarea,-button',
-      codesample_languages: [
-        { text: 'Python', value: 'python' },
-        { text: 'JavaScript', value: 'javascript' },
-        { text: 'HTML/XML', value: 'markup' },
-        { text: 'CSS', value: 'css' },
-        { text: 'Bash', value: 'bash' },
-      ],
-      codesample_global_prismjs: true,
-    });
-  </script>
-
-  <style>
-    pre[class*="language-"] {
-      background: #f5f5f5;
-      border-radius: 0.375rem;
-      margin: 1.5em 0;
-    }
-
-    code[class*="language-"] {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.875em;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
     <div>
       <div class="w-full">
@@ -87,7 +17,7 @@
               <span class="hidden md:inline bg-orange-50 p-1">{{ message.content }}</span>
             </div>
             <div class="hidden md:block">
-              <a href="{{ url_for('admin.home') }}">
+              <a href="{{ url_for('admin.home') }}" class="text-gray-600 hover:text-gray-900">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -130,7 +60,7 @@
             {% for post in posts %}
                 <article class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="relative">
-                      <div class="prose mb-4 text-gray-600">
+                      <div class="prose mb-4 text-gray-700">
                           {{ post.body | safe_html }}
                       </div>
                       <div class="absolute inset-0 bg-gray-300 opacity-0 transition-opacity duration-200 content-overlay"></div>

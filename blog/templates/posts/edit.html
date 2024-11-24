@@ -1,33 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-  <script src="{{ url_for('static', filename='js/tinymce/tinymce.min.js') }}"></script>
-  <link href="{{ url_for('static', filename='css/prism/prism.css') }}" rel="stylesheet" />
-  <script src="{{ url_for('static', filename='js/prism/prism.js') }}"></script>
-  <script>
-    tinymce.init({
-      license_key: 'gpl',
-      selector: '#editor',
-      base_url: '{{ url_for("static", filename="js/tinymce") }}',
-      plugins: 'lists link image table code help wordcount codesample',
-      toolbar: 'formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | codesample',
-      height: 250,
-      menubar: false,
-      valid_elements: 'p,br,strong,em,h1,h2,h3,h4,h5,h6,ul,ol,li,a[href],img[src|alt],blockquote,pre,code,pre[class],code[class],div[class]',
-      relative_urls: true,
-      extended_valid_elements: '-script,-iframe,-form,-input,-textarea,-button',
-      codesample_languages: [
-        { text: 'Python', value: 'python' },
-        { text: 'JavaScript', value: 'javascript' },
-        { text: 'HTML/XML', value: 'markup' },
-        { text: 'CSS', value: 'css' },
-        { text: 'Bash', value: 'bash' },
-      ],
-      codesample_global_prismjs: true,
-    });
-  </script>
-{% endblock %}
-
 {% block content %}
     <div class="max-w-2xl mx-auto">
         <div class="mb-8 flex items-center">
