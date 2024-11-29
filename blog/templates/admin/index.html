@@ -6,16 +6,16 @@
 </div>
 
 <div>
-  <h2 class="text-3xl font-bold mb-2">Adminland</h2>
-  <p class="text-sm italic">
+  <h2 class="text-3xl font-bold mb-2 dark:text-white">Adminland</h2>
+  <p class="text-sm italic dark:text-white">
     "When you're a carpenter making a beautiful chest of drawers, you're not going to
     use a piece of plywood on the back, even though it faces the wall and nobody will
     ever see it" - Steve Jobs
   </p>
 
-  <section class="bg-white shadow-sm p-4 py-6 rounded my-12">
+  <section class="bg-white shadow-sm p-4 py-6 rounded my-12 dark:bg-gray-800">
     <header class="flex justify-between mb-4 px-4">
-      <h3 class="text-xl">Messages</h3>
+      <h3 class="text-xl dark:text-white">Messages</h3>
       <a
         href="{{ url_for('admin.new_message') }}"
         class="px-2 py-1 text-center bg-blue-500 text-white hover:bg-blue-600 rounded"
@@ -31,15 +31,19 @@
           <th></th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200 bg-white">
+      <tbody
+        class="divide-y divide-gray-200 bg-white dark:bg-gray-800 dark:divide-gray-800"
+      >
         {% for message in messages %}
         <tr
-          class="{% if loop.index is even %}bg-gray-50{% endif %} hover:bg-gray-100 transition-colors"
+          class="{% if loop.index is even %}bg-gray-100 dark:bg-gray-800{% endif %} dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
         >
-          <td class="whitespace-normal break-words py-4 text-sm text-gray-900 px-4">
+          <td
+            class="whitespace-normal break-words py-4 text-sm text-gray-900 px-4 dark:text-gray-100"
+          >
             {{ message.content }}
           </td>
-          <td class="whitespace-nowrap pl-3 py-4 text-sm text-gray-500">
+          <td class="whitespace-nowrap pl-3 py-4 text-sm text-gray-500 dark:text-white">
             {{ message.created_at | relative_datetime }}
           </td>
         </tr>

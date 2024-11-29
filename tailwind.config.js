@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./blog/templates/**/*.html'],
+  darkMode: 'media',
   theme: {
     extend: {
       typography: {

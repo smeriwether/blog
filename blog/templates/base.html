@@ -17,53 +17,69 @@
     <script src="{{ url_for('static', filename='js/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/prism/prism.js') }}"></script>
     <script>
-      tinymce.init({
-        license_key: 'gpl',
-        selector: '#editor',
-        base_url: '{{ url_for("static", filename="js/tinymce") }}',
-        plugins: 'lists link image table code help wordcount codesample',
-        toolbar:
-          'formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | codesample',
-        init_instance_callback: function (editor) {
-          editor.focus();
-        },
-        setup: function (editor) {
-          editor.on('init', function () {
-            editor.selection.select(editor.getBody(), true);
-            editor.selection.collapse(false);
-          });
+      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-          // Handle enter key
-          editor.on('keydown', function (e) {
-            if (e.keyCode === 13 && e.metaKey) {
-              e.preventDefault();
-              document.getElementById('postForm').submit();
-            }
-          });
+      function setupTinyMCE(isDark) {
+        tinymce.init({
+          license_key: 'gpl',
+          selector: '#editor',
+          base_url: '{{ url_for("static", filename="js/tinymce") }}',
+          plugins: 'lists link image table code help wordcount codesample',
+          toolbar:
+            'formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | codesample',
+          init_instance_callback: function (editor) {
+            editor.focus();
+          },
+          setup: function (editor) {
+            editor.on('init', function () {
+              editor.selection.select(editor.getBody(), true);
+              editor.selection.collapse(false);
+            });
 
-          // Your existing setup code
-          editor.addShortcut('ctrl+alt+c', 'Insert code sample', function () {
-            editor.execCommand('codesample');
-          });
+            // Handle enter key
+            editor.on('keydown', function (e) {
+              if (e.keyCode === 13 && e.metaKey) {
+                e.preventDefault();
+                document.getElementById('postForm').submit();
+              }
+            });
 
-          editor.on('change', function () {
-            editor.save();
-          });
-        },
-        height: 250,
-        menubar: false,
-        valid_elements:
-          'p,br,strong,em,h1,h2,h3,h4,h5,h6,ul,ol,li,a[href],img[src|alt],blockquote,pre,code,pre[class],code[class],div[class]',
-        relative_urls: true,
-        extended_valid_elements: '-script,-iframe,-form,-input,-textarea,-button',
-        codesample_languages: [
-          { text: 'Python', value: 'python' },
-          { text: 'JavaScript', value: 'javascript' },
-          { text: 'HTML/XML', value: 'markup' },
-          { text: 'CSS', value: 'css' },
-          { text: 'Bash', value: 'bash' },
-        ],
-        codesample_global_prismjs: true,
+            // Your existing setup code
+            editor.addShortcut('ctrl+alt+c', 'Insert code sample', function () {
+              editor.execCommand('codesample');
+            });
+
+            editor.on('change', function () {
+              editor.save();
+            });
+          },
+          height: 250,
+          menubar: false,
+          valid_elements:
+            'p,br,strong,em,h1,h2,h3,h4,h5,h6,ul,ol,li,a[href],img[src|alt],blockquote,pre,code,pre[class],code[class],div[class]',
+          relative_urls: true,
+          extended_valid_elements: '-script,-iframe,-form,-input,-textarea,-button',
+          codesample_languages: [
+            { text: 'Python', value: 'python' },
+            { text: 'JavaScript', value: 'javascript' },
+            { text: 'HTML/XML', value: 'markup' },
+            { text: 'CSS', value: 'css' },
+            { text: 'Bash', value: 'bash' },
+          ],
+          codesample_global_prismjs: true,
+          skin: isDark ? 'oxide-dark' : 'oxide',
+          content_css: isDark ? 'dark' : 'default',
+        });
+      }
+
+      setupTinyMCE(darkModeMediaQuery.matches);
+
+      // Listen for system dark mode changes
+      darkModeMediaQuery.addEventListener('change', (e) => {
+        // Remove existing editor
+        tinymce.remove();
+        // Reinitialize with new theme
+        setupTinyMCE(e.matches);
       });
     </script>
 
@@ -81,7 +97,7 @@
     </style>
     {% block head %} {% endblock %}
   </head>
-  <body class="bg-gray-50">
+  <body class="bg-gray-50 dark:bg-gray-900">
     <div class="max-w-4xl mx-auto px-4 py-8">{% block content %} {% endblock %}</div>
   </body>
 </html>
